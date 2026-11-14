@@ -1,56 +1,106 @@
-# Welcome to your Expo app 👋
+ SoloTrack
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Student name: A.S.R Aluthgedara  
+Student ID: PS/2022/040  
+Module: Mobile Application Development  
+Assignment: Assignment 01  
+Status: In development — dashboard milestone
 
-## Get started
+***********************************************************************************************************************************************************************************************
 
-1. Install dependencies
+** About the application
 
-   ```bash
-   npm install
-   ```
+SoloTrack is a job follow-up and payment-tracking application for independent service workers.It helps workers identify unfinished work, due follow-ups and outstanding payments. The initial design supports phone repairs and cleaning jobs.Work completion and payment are tracked separately. A completed job may still require a payment follow-up.
 
-2. Start the app
+** Early user research
 
-   ```bash
-   npx expo start
-   ```
+Informal conversations were conducted with a phone repairer and a cleaner.Both described using a phone calendar and mentioned difficulties keeping track of times and places. The repairer also discussed customer and work details. The cleaner described agreeing on a price before starting work.These conversations informed the initial design. They are early findings from two people, not a comprehensive user study.
 
-In the output, you'll find options to open the app in a
+** Current implementation
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   -JavaScript dashboard with a shared color and spacing theme
+   -Four fictional, realistic sample job records
+   -FlatList displaying job cards
+   -Needs attention and View all list modes
+   -Job preview modal
+   -Outstanding-balance and overdue-payment calculations
+   -Identification of due follow-ups and overdue work
+   -Press feedback, status labels and elevated cards
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+The current version is a read-only dashboard prototype. It does not yet support creating jobs, changing payment records or saving user changes.
 
-## Get a fresh project
+** Screens and navigation
 
-When you're ready, run:
+There is currently one implemented SoloTrack content screen
 
-```bash
-npm run reset-project
-```
+Dashboard: attention summary, payment totals and job list
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+The job preview is a Modal overlay, not a separate route.The root Expo Router layout uses a Stack. Tab navigation and a nested job-details stack are planned. The template Explore route remains and will be replaced during navigation development.
 
-### Other setup steps
+** Components used
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+   -SafeAreaView : Main screen and modal safe areas 
+   -View : Cards, summaries and layout containers 
+   -Text : Labels, amounts and job information 
+   -Pressable : Job selection, list switching and modal closing 
+   -FlatList : Rendering sample jobs 
+   -Modal : Displaying the selected job 
+   -ScrollView : Scrollable modal content 
+   -StyleSheet : Screen styling 
 
-## Learn more
+The required Image component will be added in a later milestone.
 
-To learn more about developing your project with Expo, look at the following resources:
+** Source organization
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+   `src/app/_layout.js` — root navigation layout
+   `src/app/index.js` — dashboard and job preview
+   `src/data/jobs.js` — sample job records
+   `src/utils/job_helpers.js` — attention and payment calculations
+   `src/constants/solotrack_theme.js` — reusable design values
 
-## Join the community
+** Technology
 
-Join our community of developers creating universal apps.
+    React Native
+    Expo SDK 58
+    Expo Router
+    JavaScript
+    React Native Safe Area Context
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+** Run locally
+
+Install a Node.js version compatible with the project's Expo SDK.Then Run below coed one at a time,
+
+git clone https://github.com/SandewR/Solo_Track.git
+cd Solo_Track
+npm ci
+npx expo start
+
+Start an Android emulator and press `a` in the Expo terminal.
+
+Run commands from the project folder containing `package.json`. A compatible Expo Go client is required.
+
+
+** Remaining work
+
+   -Tab navigation and nested stack navigation
+   -Shared interactive job state across screens
+   -Add/edit job form and validation
+   -Job-status and payment updates
+   -Persistent local storage
+   -Filtering controls
+   -AppState background-to-foreground handling
+   -Local notifications
+   -Image assets and further visual refinement  
+   -Broader testing and final demonstration video
+
+Time-sensitive labels currently recalculate when the dashboard renders. Automatic foreground refresh is not implemented yet.
+
+** Local notifications
+
+Not implemented yet.
+
+The planned feature will use `expo-notifications` to schedule local follow-up reminders. Research references, permission handling and actual device test results will be documented when implemented.
+
+** Demonstration video
+
+Not recorded yet. An accessible demonstration-video link will be added before final submission.
