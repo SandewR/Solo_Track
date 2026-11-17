@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FlatList,
   Modal,
@@ -10,13 +10,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { COLORS, RADIUS, SPACING } from '../constants/solotrack_theme';
-import { initialJobs } from '../data/jobs';
+import { COLORS, RADIUS, SPACING } from '../../constants/solotrack_theme';
+import { useJobs } from '../../context/job_context';
 import {
   getAttentionReasons,
   getJobSummary,
   getOutstandingBalance,
-} from '../utils/job_helpers';
+} from '../../utils/job_helpers';
 
 
 function isToday(value) {
@@ -57,12 +57,18 @@ function getStatusColors(status) {
 
 export default function TodayScreen()
 {
+const { jobs } = useJobs();
 const [showAll, setShowAll] = useState(false);
 const [selectedJob, setSelectedJob] = useState(null);
 
-const now = Date.now();
+const [now, setNow] = useState(() => Date.now());
 
-const sortedJobs = [...initialJobs].sort(
+useEffect(() => {
+  const timer = setInterval(() => setNow(Date.now()), 30_000);
+  return () => clearInterval(timer);
+}, []);
+
+const sortedJobs = [...jobs].sort(
   (first, second) =>
     new Date(first.scheduledAt) - new Date(second.scheduledAt)
 );
@@ -73,7 +79,7 @@ const attentionJobs = sortedJobs.filter(
 
 const visibleJobs = showAll ? sortedJobs : attentionJobs;
 
-const summary = getJobSummary(initialJobs, now);
+const summary = getJobSummary(jobs, now);
 
 const nextAttentionJob = attentionJobs[0] ?? null;
 
