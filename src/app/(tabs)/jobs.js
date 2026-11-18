@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -87,6 +88,14 @@ export default function JobsScreen() {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <View>
+            <View style={styles.workspaceBanner}>
+  <Image
+    source={require('../../../assets/images/solotrack.png')}
+    style={styles.workspaceImage}
+    resizeMode="cover"
+  />
+  <Text style={styles.bannerTitle}>{'Every job.\nOne place.'}</Text>
+</View>
             <Text style={styles.eyebrow}>YOUR WORKSPACE</Text>
             <Text style={styles.title}>Jobs</Text>
             <Text style={styles.description}>
@@ -282,4 +291,24 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.text,
   },
+  workspaceBanner: {
+  height: 170,
+  borderRadius: 22,
+  overflow: 'hidden',
+  marginBottom: 24,
+  backgroundColor: COLORS.darkSurface,
+},
+workspaceImage: {
+  width: '100%',
+  height: '100%',
+},
+bannerTitle: {
+  position: 'absolute',
+  left: 18,
+  bottom: 18,
+  color: '#FFFFFF',
+  fontSize: 24,
+  lineHeight: 29,
+  fontWeight: '800',
+},
 });

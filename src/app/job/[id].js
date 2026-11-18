@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -16,6 +17,11 @@ import { getOutstandingBalance } from '../../utils/job_helpers';
 import { useState } from 'react';
 import { scheduleJobReminder } from '../../utils/notifications';
 
+const JOB_PHOTO_OVERRIDES = {
+  'batery-repair': require('../../../assets/images/batery-repair.png'),
+  'office-cleaning': require('../../../assets/images/office-cleaning.png'),
+  'phone-repair': require('../../../assets/images/phone-repair.png'),
+};
 
 function formatMoney(amount) {
   if (typeof amount !== 'number' || !Number.isFinite(amount)) {
@@ -23,6 +29,24 @@ function formatMoney(amount) {
   }
 
   return `LKR ${amount.toLocaleString('en-LK')}`;
+}
+
+function getJobImage(serviceType) {
+  const type = String(serviceType ?? '').trim().toLowerCase();
+
+  if (type.includes('cleaning')) {
+    return require('../../../assets/images/cleaning.png');
+  }
+
+  if (type.includes('maintenance')) {
+    return require('../../../assets/images/maintenance.png');
+  }
+
+  if (type.includes('phone') && type.includes('repair')) {
+    return require('../../../assets/images/phone-repair.png');
+  }
+
+  return require('../../../assets/images/solotrack.png');
 }
 
 export default function JobDetailsScreen() {
@@ -100,6 +124,10 @@ function confirmStatusChange() {
   }
 
   const balance = getOutstandingBalance(job);
+  const imageKey = /\biphone[\s-]*12\b/i.test(job.title ?? '')
+    ? 'batery-repair'
+    : job.imageKey;
+  const jobImage = JOB_PHOTO_OVERRIDES[imageKey] ?? getJobImage(job.serviceType);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -111,6 +139,8 @@ function confirmStatusChange() {
         >
           <Text style={styles.backText}>‹ Back</Text>
         </Pressable>
+
+        <Image source={jobImage} style={styles.jobImage} resizeMode="cover" />
 
         <Text style={styles.eyebrow}>JOB DETAILS</Text>
         <Text style={styles.title}>{job.title}</Text>
@@ -462,5 +492,11 @@ confirmButton: {
   paddingHorizontal: 22,
   paddingVertical: 14,
   borderRadius: 14,
+},
+jobImage: {
+  width: '100%',
+  height: 150,
+  borderRadius: 20,
+  marginBottom: 20,
 },
 });

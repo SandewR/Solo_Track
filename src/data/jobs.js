@@ -34,6 +34,7 @@ export const initialJobs = [
   },
   {
     id: 'JOB-002',
+    imageKey: 'phone-repair',
     title: 'Samsung Galaxy A54 charging issue',
     serviceType: 'Repair',
     customerName: 'Sample Customer B',
@@ -57,6 +58,7 @@ export const initialJobs = [
   },
   {
     id: 'JOB-003',
+    imageKey: 'office-cleaning',
     title: 'Small office cleaning',
     serviceType: 'Cleaning',
     customerName: 'Sample Customer C',
@@ -80,6 +82,7 @@ export const initialJobs = [
   },
   {
     id: 'JOB-004',
+    imageKey: 'batery-repair',
     title: 'iPhone 12 battery replacement',
     serviceType: 'Repair',
     customerName: 'Sample Customer D',

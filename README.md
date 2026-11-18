@@ -1,106 +1,74 @@
- SoloTrack
+    SoloTrack
 
-Student name: A.S.R Aluthgedara  
-Student ID: PS/2022/040  
-Module: Mobile Application Development  
-Assignment: Assignment 01  
-Status: In development — dashboard milestone
+Student name: A.S.R Aluthgedara
 
-***********************************************************************************************************************************************************************************************
+Student ID: PS/2022/040
 
-** About the application
+Module: Mobile Application Development, Assignment 01
 
-SoloTrack is a job follow-up and payment-tracking application for independent service workers.It helps workers identify unfinished work, due follow-ups and outstanding payments. The initial design supports phone repairs and cleaning jobs.Work completion and payment are tracked separately. A completed job may still require a payment follow-up.
+    What the app does
 
-** Early user research
+SoloTrack helps independent service workers keep track of scheduled work, customer follow-ups, and payments. The Today tab highlights jobs that need attention, such as work past its target date or completed jobs with an outstanding balance. Work status and payment are shown separately because finishing the service does not mean the customer has paid.
 
-Informal conversations were conducted with a phone repairer and a cleaner.Both described using a phone calendar and mentioned difficulties keeping track of times and places. The repairer also discussed customer and work details. The cleaner described agreeing on a price before starting work.These conversations informed the initial design. They are early findings from two people, not a comprehensive user study.
+Informal conversations with a phone repairer and a cleaner helped identify the information that matters: the job time and location, customer notes, and whether the price has been agreed. The app uses fictional examples for both types of work.
 
-** Current implementation
+    Screens
 
-   -JavaScript dashboard with a shared color and spacing theme
-   -Four fictional, realistic sample job records
-   -FlatList displaying job cards
-   -Needs attention and View all list modes
-   -Job preview modal
-   -Outstanding-balance and overdue-payment calculations
-   -Identification of due follow-ups and overdue work
-   -Press feedback, status labels and elevated cards
+SoloTrack has three main screens. The short opening image and the two modals appear within the app and are not separate navigation destinations.
 
-The current version is a read-only dashboard prototype. It does not yet support creating jobs, changing payment records or saving user changes.
+Today : `src/app/(tabs)/index.js` - Shows jobs needing attention, outstanding amounts, overdue payments, and a job preview. 
+Jobs : `src/app/(tabs)/jobs.js` - Lists jobs with All, Active, and Completed filters. Tap a job to open its details. 
+Job details : `src/app/job/[id].js` - Shows the selected job's image, customer and schedule details, payment balance, status controls, and follow-up reminder options. 
 
-** Screens and navigation
+    Sample job data
 
-There is currently one implemented SoloTrack content screen
+`src/data/jobs.js` defines four sample records. Their scheduled dates are calculated relative to the day the app loads. Prices are in Sri Lankan rupees.
 
-Dashboard: attention summary, payment totals and job list
+Two-bedroom home cleaning : LKR 6,500 agreed, LKR 1,500 received, and LKR 5,000 remaining. 
+Samsung Galaxy A54 charging issue : LKR 4,500 estimated; the price is awaiting customer approval. 
+Small office cleaning : LKR 4,500 agreed, LKR 1,500 received, and LKR 3,000 remaining. 
+iPhone 12 battery replacement : LKR 12,000 agreed, LKR 5,000 received, and LKR 7,000 remaining. 
 
-The job preview is a Modal overlay, not a separate route.The root Expo Router layout uses a Stack. Tab navigation and a nested job-details stack are planned. The template Explore route remains and will be replaced during navigation development.
+    React Native components
 
-** Components used
+`View` and `Text` : Layout, labels, status indicators, and amounts across Today, Jobs, and Job details. 
+`Image` : Jobs banner, job detail photos, and the opening cover in `src/components/startup_background.js`. 
+`Pressable` : Job cards, list filters, status options, confirmation controls, and reminder buttons. 
+`FlatList` : Renders the sample job cards on both Today and Jobs. 
+`Modal` : Today has a job preview. Job details has a Cancel/Confirm modal before changing work status. 
+`ScrollView` : Lets the user scroll through job details and the preview content. 
 
-   -SafeAreaView : Main screen and modal safe areas 
-   -View : Cards, summaries and layout containers 
-   -Text : Labels, amounts and job information 
-   -Pressable : Job selection, list switching and modal closing 
-   -FlatList : Rendering sample jobs 
-   -Modal : Displaying the selected job 
-   -ScrollView : Scrollable modal content 
-   -StyleSheet : Screen styling 
+    Navigation and shared state
 
-The required Image component will be added in a later milestone.
+ `src/app/_layout.js` sets up the root stack, shared job provider, and opening cover.
+ `src/app/(tabs)/_layout.js` defines the Today and Jobs tabs.
+ `src/app/job/_layout.js` defines the nested job stack. The `[id].js` route reads the selected job's ID and shows its details. Back returns to the Jobs list.
+ `src/context/job_context.js` holds the job list with React Context and `useState`. Confirming a status change updates the same record used by Today and Jobs, so filters and summaries reflect the change. A status change does not change the payment amount. Changes are held in memory for the session.
+ `src/utils/job_helpers.js` calculates attention reasons and outstanding amounts from those records.
 
-** Source organization
+    Returning to the app
 
-   `src/app/_layout.js` — root navigation layout
-   `src/app/index.js` — dashboard and job preview
-   `src/data/jobs.js` — sample job records
-   `src/utils/job_helpers.js` — attention and payment calculations
-   `src/constants/solotrack_theme.js` — reusable design values
+`src/context/job_context.js` listens to React Native [AppState](https://reactnative.dev/docs/0.88/appstate). When the app returns to the foreground, the provider saves the time and Jobs displays it as **Updated after returning at …**. To try it, open Jobs, go to the Android Home screen, and return to the running app.
 
-** Technology
+    Local notifications
 
-    React Native
-    Expo SDK 58
-    Expo Router
-    JavaScript
-    React Native Safe Area Context
+The app uses the [Expo SDK 58 notifications reference](https://docs.expo.dev/versions/v58.0.0/sdk/notifications/) for permission checks and time interval triggers. In `src/utils/notifications.js`, the app checks or requests permission and calls `scheduleNotificationAsync` to post a one-time follow-up notification on the device. During Android testing, explicit channel creation failed, so the final schedule uses Expo's default channel. The app also configures presentation while it is open.
 
-** Run locally
+Open a job and scroll to **Follow-up reminder**. Choose **Remind me in one hour** for a follow-up, or **Test reminder in 10 seconds** to verify the notification quickly. The 10-second test worked in Expo Go on the Android emulator.
 
-Install a Node.js version compatible with the project's Expo SDK.Then Run below coed one at a time,
+    Run locally
+
+You need Node.js, npm, and an Android emulator with an Expo Go version compatible with Expo SDK 58. Run these commands one at a time:
+
 
 git clone https://github.com/SandewR/Solo_Track.git
 cd Solo_Track
 npm ci
 npx expo start
 
-Start an Android emulator and press `a` in the Expo terminal.
 
-Run commands from the project folder containing `package.json`. A compatible Expo Go client is required.
+Start the Android emulator and press `a` in the Expo terminal. Allow notifications if Android asks. The notification demonstration requires Android rather than the web preview.
 
+    Demonstration video
 
-** Remaining work
-
-   -Tab navigation and nested stack navigation
-   -Shared interactive job state across screens
-   -Add/edit job form and validation
-   -Job-status and payment updates
-   -Persistent local storage
-   -Filtering controls
-   -AppState background-to-foreground handling
-   -Local notifications
-   -Image assets and further visual refinement  
-   -Broader testing and final demonstration video
-
-Time-sensitive labels currently recalculate when the dashboard renders. Automatic foreground refresh is not implemented yet.
-
-** Local notifications
-
-Not implemented yet.
-
-The planned feature will use `expo-notifications` to schedule local follow-up reminders. Research references, permission handling and actual device test results will be documented when implemented.
-
-** Demonstration video
-
-Not recorded yet. An accessible demonstration-video link will be added before final submission.
+Watch the SoloTrack demonstration -> (https://drive.google.com/drive/folders/1MaIrF_b2WjUhl5oP82Bec2hHshxEuz5V?usp=drive_link)
